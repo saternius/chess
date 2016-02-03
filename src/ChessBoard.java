@@ -54,6 +54,8 @@ public class ChessBoard {
 					Square sq = board[j][i];
 					stage.setColor(sq.color);
 					stage.fillRect(sq.x,sq.y,sq.dim,sq.dim);
+					stage.setColor(Color.black);
+					stage.drawRect(sq.x,sq.y,sq.dim,sq.dim);
 					if(sq.peice != null){
 						sq.peice.draw(stage,sq.x,sq.y);
 					}
@@ -121,7 +123,7 @@ public class ChessBoard {
 		public boolean checkClicked(int mouseX, int mouseY) {
 			boolean hit = mouseX>x && mouseX < x+dim && mouseY>y && mouseY<y+dim;
 			if(hit && peice!=null && (turn == peice.white)){
-				//in bounds
+				//clicked on your peice
 				unfocusAllSquares();
 				color = Color.RED;
 				peiceFocused = peice.posMove(xPos, yPos);
@@ -129,6 +131,15 @@ public class ChessBoard {
 					focusedSquare = this;
 				}
 			}else if (hit && peice == null && focusedSquare!=null && color==Color.BLUE){
+				//clicked on a square with no enemy to move your peice
+				peice = focusedSquare.peice;
+				focusedSquare.peice = null;
+				focusedSquare = null;
+				unfocusAllSquares();
+				turn = !turn;
+			}else if(hit && focusedSquare!=null && focusedSquare.peice!=null && peice!=null && (turn != peice.white) && color==Color.BLUE){
+				//clicked on a square with an enemy peice
+				System.out.println("EAT");
 				peice = focusedSquare.peice;
 				focusedSquare.peice = null;
 				focusedSquare = null;
@@ -139,7 +150,6 @@ public class ChessBoard {
 		}
 		public void ogColor() {
 			color = ogColor;
-			
 		}
 		
 	}
