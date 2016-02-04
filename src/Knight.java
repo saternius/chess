@@ -2,14 +2,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 
-public class Knight extends Peice {
+public class Knight extends Piece {
 
 	public Knight(boolean w) {
 		super(w,990);
 	}
 	
 	@Override
-	public boolean posMove(int xPos, int yPos) {
+	public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 	
 		ArrayList<Integer[]> ret = new ArrayList<Integer[]>();  
 		boolean high = false;
@@ -33,16 +33,20 @@ public class Knight extends Peice {
 		}
 
 	
+		ArrayList<Square> posMoves = new ArrayList<Square>();
 		for(int i=0;i<ret.size();i++){
 			Integer[] posMove = ret.get(i);
 			int posX = posMove[0];
 			int posY = posMove[1];
 			if(ChessBoard.board[posX][posY].peice == null || white != ChessBoard.board[posX][posY].peice.white){
-				ChessBoard.board[posX][posY].color = Color.BLUE;
+				if(color){
+					ChessBoard.board[posX][posY].color = Color.BLUE;
+				}
 				high = true;
+				posMoves.add(ChessBoard.board[posX][posY]);
 			}
 		}
-		return high;
+		return posMoves;
 	}
 
 }

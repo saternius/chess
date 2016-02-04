@@ -13,7 +13,7 @@ import javax.swing.Timer;
 public class GameCanvas extends Canvas implements MouseMotionListener,
 		MouseListener, MouseWheelListener, KeyListener {
 	boolean repaintInProgress = false;// checks if painting is going on
-	ChessBoard board;
+	public static ChessBoard board;
 	// inits the GameCanvas and adds all the eventListener
 	GameCanvas() { 
 		setIgnoreRepaint(true); 

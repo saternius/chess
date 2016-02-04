@@ -1,14 +1,23 @@
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 
-public class Peice {
+public class Piece {
 	int value;
 	boolean white;
 	int xS;
-	public Peice(boolean w, int xSft){
+	int x;
+	int y;
+	public ArrayList<Piece> attackers = new ArrayList<Piece>();  
+	public Piece(boolean w, int xSft){
 		white = w;
 		xS = xSft;
 	}
+	
+	public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
+		return null;
+	}
+	
 	
 	public void draw(Graphics stage, int x, int y){
 		int yShift = 0;
@@ -19,9 +28,5 @@ public class Peice {
 	
 	}
 
-	public boolean posMove(int xPos, int yPos) {
-		return false;
-		
-	}
 
 }
