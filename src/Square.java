@@ -1,74 +1,84 @@
 import java.awt.Color;
 
 public class Square{
-		static boolean peiceFocused = false;	/*true if a piece has been clicked on*/
-		static Square focusedSquare = null;     /*Square that is currently selected*/
-		Color color;
-		Color ogColor;
-		int x;
-		int y;
-		int dim = gameApplet.boardDim/8;
+		static Square focusedSquare = null;  /*Square that is currently selected*/
 		String name;
 		Piece peice = null;
-		int xPos;
-		int yPos;
-		Square(int xPos,int yPos,Piece p, String n,boolean c){
+		int x;
+		int y;
+		
+		//Graphical properties.
+		Color color;
+		Color ogColor;
+		int xCoord;
+		int yCoord;
+		int dim = gameApplet.boardDim/8;
+		
+		Square(int x,int y,Piece p, String n){
 			this.peice = p;
-			this.xPos = xPos;
-			this.yPos = yPos;
+			this.x = x;
+			this.y = y;
 			name = n;
-			if(c){
+			initGraphics();
+		}
+		
+		//Change the piece on this square
+		private void changePiece(boolean turn) {
+			ChessBoard.unfocusAllSquares();
+			peice = focusedSquare.peice;
+			focusedSquare.peice = null;
+			focusedSquare = null;
+			ChessBoard.wTurn = !turn;
+			
+		}
+		
+		
+		//---------------Anything below is beyond the first Assignment---------------------
+		
+		//Handles if this square is clicked on
+		public boolean checkClicked(int mouseX, int mouseY) {
+			boolean hit = mouseX>xCoord && mouseX < xCoord+dim && mouseY>yCoord && mouseY<yCoord+dim;
+			boolean turn = ChessBoard.wTurn;
+	
+			if(hit && peice!=null && (turn == peice.white)){
+				//clicked to select a piece
+				ChessBoard.unfocusAllSquares();
+				color = Color.RED;
+				if(peice.posMove(x, y, true)!=null){
+					focusedSquare = this;
+				}
+				
+			}else if (hit && peice == null && focusedSquare!=null && color==Color.BLUE){  
+				//clicked on an empty square that the focused piece can validly move to
+				changePiece(turn);
+			}else if(hit && focusedSquare!=null && focusedSquare.peice!=null && peice!=null && (turn != peice.white) && color==Color.BLUE){
+				//clicked on an enemy to eat
+				changePiece(turn);
+			}
+			//ChessBoard.isChecked();
+			ChessBoard.isMated();
+			if(peice!=null){
+				peice.x = x;
+				peice.y = y;
+			}
+			return false;
+		}
+
+		
+		private void initGraphics() {
+			if((x+1+(y%2))%2 == 0){
 				color = Color.decode("#006633");
 				ogColor = Color.decode("#006633");
 			}else{
 				color = Color.white;
 				ogColor = Color.white;
 			}
-			x = xPos*dim;
-			y = yPos*dim;
+			xCoord = x*dim;
+			yCoord = y*dim;
 			
 		}
-		public boolean checkClicked(int mouseX, int mouseY) {
-			boolean hit = mouseX>x && mouseX < x+dim && mouseY>y && mouseY<y+dim;
-			boolean turn = ChessBoard.wTurn;
-			
-			if(hit && peice!=null && (turn == peice.white)){
-				//clicked on your peice
-				ChessBoard.unfocusAllSquares();
-				color = Color.RED;
-				
-				peiceFocused = peice.posMove(xPos, yPos, true)!=null;
-				if(peiceFocused){
-					focusedSquare = this;
-					
-				}
-			}else if (hit && peice == null && focusedSquare!=null && color==Color.BLUE){
-				System.out.println("esse");
-				//clicked on a square with no enemy to move your peice
-				peice = focusedSquare.peice;
-				focusedSquare.peice = null;
-				focusedSquare = null;
-				ChessBoard.unfocusAllSquares();
-				ChessBoard.wTurn = !turn;
-			}else if(hit && focusedSquare!=null && focusedSquare.peice!=null && peice!=null && (turn != peice.white) && color==Color.BLUE){
-				//clicked on a square with an enemy peice
-				System.out.println("EAT");
-				peice = focusedSquare.peice;
-				focusedSquare.peice = null;
-				focusedSquare = null;
-				ChessBoard.unfocusAllSquares();
-				ChessBoard.wTurn = !turn;
-			}
 		
-			ChessBoard.isChecked();
-			if(peice!=null){
-				peice.x = xPos;
-				peice.y = yPos;
-			}
-			
-			return false;
-		}
-		public void ogColor() {
+		public void restoreColor() {
 			color = ogColor;
 		}
 		

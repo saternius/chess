@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Rook extends Piece {
 
 	public Rook(boolean w) {
-		super(w,990+330);
+		super(w,990+330,"Rook");
 	}
 
 
@@ -22,7 +22,7 @@ public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 			k++;
 		}
 		
-		//check if can eat
+		//check if can eat the blockage
 		if(xPos+k<8 && !ChessBoard.noPeices(xPos+k, yPos) && white!=ChessBoard.board[xPos+k][yPos].peice.white){
 			Integer[] pos = {xPos+k,yPos};
 			ret.add(pos);
@@ -36,7 +36,7 @@ public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 			k++;
 		}
 		
-		//check if can eat
+		//check if can eat the blockage
 		if((xPos-k)>-1 && !ChessBoard.noPeices(xPos-k, yPos) && white!=ChessBoard.board[xPos-k][yPos].peice.white){
 			Integer[] pos = {xPos-k,yPos};
 			ret.add(pos);
@@ -50,7 +50,7 @@ public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 			k++;
 		}
 		
-		//check if can eat
+		//check if can eat the blockage
 		if(yPos-k>-1 && !ChessBoard.noPeices(xPos, yPos-k) && white!=ChessBoard.board[xPos][yPos-k].peice.white){
 			Integer[] pos = {xPos,yPos-k};
 			ret.add(pos);
@@ -64,11 +64,13 @@ public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 			k++;
 		}
 		
-		//check if can eat
+		//check if can eat the blockage
 		if(yPos+k<8 && !ChessBoard.noPeices(xPos, yPos+k) && white!=ChessBoard.board[xPos][yPos+k].peice.white){
 			Integer[] pos = {xPos,yPos+k};
 			ret.add(pos);
 		}	
+		
+		//Turn all legal squares blue
 		ArrayList<Square> posMoves = new ArrayList<Square>();
 		for(int i=0;i<ret.size();i++){
 			Integer[] posMove = ret.get(i);

@@ -43,10 +43,10 @@ public class ChessBoard {
 				String[] letters = {"A","B","C","D","E","F","G","H"};
 				String name = letters[j]+(8-i);
 				Piece peice = getPiece(wStartPos[(i*8+j)],bStartPos[(i*8+j)]);
-				boolean coloredSquare = (j+1+(i%2))%2 == 0;
-				board[j][i] = new Square(j,i,peice,name,coloredSquare);
+				board[j][i] = new Square(j,i,peice,name);
 			}
 		}
+		
 	}
 	
 	//Takes in both the white and black positioning arrays, and returns the appropriate Piece 
@@ -86,13 +86,13 @@ public class ChessBoard {
 
 	}
 	
+	//Returns true if there is noPeices in the specified coords
 	public static boolean noPeices(int x, int y){
 		return board[x][y].peice==null;
 	}
 	
-	
+	//Returns true if King is in checked position
 	public static boolean isChecked(){
-
 		updateThreats();
 		Piece king = wKing;
 		String player = "white";
@@ -100,7 +100,6 @@ public class ChessBoard {
 			player = "black";
 			king = bKing;
 		}
-		System.out.println(player);
 		if((attacks.indexOf(board[king.x][king.y])>-1)){
 			System.out.println(player+" is checked");
 		}
@@ -109,7 +108,12 @@ public class ChessBoard {
 		
 	}
 	
+	//Return true if king is mated
+	public static boolean isMated(){
+		return isChecked() && (( wTurn && (wKing.posMove(0, 0, false).size()==0)) || ( !wTurn && (bKing.posMove(0, 0, false).size()==0))  );
+	}
 	
+	//Updates the attacks array
 	public static void updateThreats(){
 		attacks = new ArrayList<Square>();
 		for(int i=0;i<board.length;i++){
@@ -130,8 +134,12 @@ public class ChessBoard {
 		}
 	}
 	
+	
+	//-----------------Anything below is beyond the first Assignment-------------------
+	
 	//Alerts a square that the board has been clicked
 	public static void clicked(int x, int y) {
+		//System.out.println("clicked");
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
 					Square sq = board[j][i];
@@ -144,12 +152,12 @@ public class ChessBoard {
 	public static void unfocusAllSquares(){
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
-				board[j][i].ogColor();
+				board[j][i].restoreColor();
 			}
 		}
 	}
 	
-	//Draws the board
+	//Function that draws the ChessBoard
 	public void draw(Graphics stage){
 		boolean printCoords = true;	
 		boolean printThreats = false;
@@ -157,15 +165,15 @@ public class ChessBoard {
 			for(int j=0; j<board[i].length;j++){
 					Square sq = board[j][i];
 					stage.setColor(sq.color);
-					stage.fillRect(sq.x,sq.y,sq.dim,sq.dim);
+					stage.fillRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
 					stage.setColor(Color.black);
-					stage.drawRect(sq.x,sq.y,sq.dim,sq.dim);
+					stage.drawRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
 					if(sq.peice != null){
-						sq.peice.draw(stage,sq.x,sq.y);
+						sq.peice.draw(stage,sq.xCoord,sq.yCoord);
 					}
 					if(printCoords){
 						stage.setColor(Color.black);
-						stage.drawString(sq.name, sq.x+5, sq.y+15);
+						stage.drawString(sq.name, sq.xCoord+5, sq.yCoord+15);
 					}
 			}
 		}
@@ -174,11 +182,13 @@ public class ChessBoard {
 				stage.setColor(Color.ORANGE);
 				for(int i=0; i<attacks.size();i++){
 					Square sq = attacks.get(i);
-					stage.fillRect(sq.x,sq.y,sq.dim,sq.dim);
+					stage.fillRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
 				}
 			}
 		
 	}
+	
+	
 	
 }
 

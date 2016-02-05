@@ -5,15 +5,14 @@ import java.util.ArrayList;
 public class Knight extends Piece {
 
 	public Knight(boolean w) {
-		super(w,990);
+		super(w,990,"Knight");
 	}
 	
 	@Override
 	public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 	
+		//get all 8 positions the knight could possibly go to.
 		ArrayList<Integer[]> ret = new ArrayList<Integer[]>();  
-		boolean high = false;
-	
 		Integer[] pos1 = {xPos-1,yPos-2};
 		Integer[] pos2 = {xPos+1,yPos-2};	
 		Integer[] pos3 = {xPos-2,yPos-1};	
@@ -24,6 +23,7 @@ public class Knight extends Piece {
 		Integer[] pos8 = {xPos-1,yPos+2};	
 		Integer[][] poses = {pos1,pos2,pos3,pos4,pos5,pos6,pos7,pos8};
 		
+		//if a position is out of bounds remove it
 		for(int i=0; i<poses.length; i++){
 			int xP = poses[i][0];
 			int yP = poses[i][1];
@@ -32,7 +32,7 @@ public class Knight extends Piece {
 			}
 		}
 
-	
+		//if your piece is not in the way then mark the square for being legal. Turn all legal squares blue
 		ArrayList<Square> posMoves = new ArrayList<Square>();
 		for(int i=0;i<ret.size();i++){
 			Integer[] posMove = ret.get(i);
@@ -42,7 +42,6 @@ public class Knight extends Piece {
 				if(color){
 					ChessBoard.board[posX][posY].color = Color.BLUE;
 				}
-				high = true;
 				posMoves.add(ChessBoard.board[posX][posY]);
 			}
 		}
