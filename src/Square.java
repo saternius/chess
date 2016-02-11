@@ -1,5 +1,5 @@
 import java.awt.Color;
-
+///Handles all the information contained within a square.
 public class Square{
 		static Square focusedSquare = null;  /*Square that is currently selected*/
 		String name;
@@ -26,6 +26,10 @@ public class Square{
 		private void changePiece(boolean turn) {
 			ChessBoard.unfocusAllSquares();
 			peice = focusedSquare.peice;
+			if(peice!=null){
+				peice.x = this.x;
+				peice.y = this.y;
+			}
 			focusedSquare.peice = null;
 			focusedSquare = null;
 			ChessBoard.wTurn = !turn;
@@ -44,7 +48,7 @@ public class Square{
 				//clicked to select a piece
 				ChessBoard.unfocusAllSquares();
 				color = Color.RED;
-				if(peice.posMove(x, y, true)!=null){
+				if(peice.posMove()!=null){
 					focusedSquare = this;
 				}
 				
@@ -57,10 +61,6 @@ public class Square{
 			}
 			//ChessBoard.isChecked();
 			ChessBoard.isMated();
-			if(peice!=null){
-				peice.x = x;
-				peice.y = y;
-			}
 			return false;
 		}
 

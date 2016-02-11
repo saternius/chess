@@ -1,6 +1,6 @@
 import java.awt.Font;
 
-//TODO: implement the fonts class.
+/// Font handler, empty for now.
 public class Fonts {
 
 	public Fonts() {

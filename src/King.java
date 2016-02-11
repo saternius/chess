@@ -1,16 +1,27 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-
+/// Piece that functions as a king
 public class King extends Piece {
 	
-	public King(boolean w) {
-		super(w,0,"King");
+	public King(boolean w,int x, int y) {
+		super(w,0,"King",x,y);
 		// TODO Auto-generated constructor stub
 	}
 	
-public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
-			
+	@Override
+	public ArrayList<Square> threatMap() {
+		return getMoves(false);
+	}
+	
+	@Override
+	public ArrayList<Square> posMove() {
+		return getMoves(true);
+	}
+	
+	public ArrayList<Square> getMoves(boolean color){
+		int xPos = this.x;
+		int yPos = this.y;
 		ArrayList<Integer[]> ret = new ArrayList<Integer[]>();  
 		
 		//right
@@ -109,19 +120,7 @@ public ArrayList<Square> posMove(int xPos, int yPos, boolean color) {
 		}
 		
 		//Check if move is not blocked by own pieces and flip all legal moves blue.
-		ArrayList<Square> posMoves = new ArrayList<Square>();
-		for(int i=0;i<ret.size();i++){
-			Integer[] posMove = ret.get(i);
-			int posX = posMove[0];
-			int posY = posMove[1];
-			if((ChessBoard.board[posX][posY].peice == null || white != ChessBoard.board[posX][posY].peice.white) && ChessBoard.attacks.indexOf(ChessBoard.board[posX][posY])==-1){
-				if(color){
-					ChessBoard.board[posX][posY].color = Color.BLUE;
-				}
-				
-				posMoves.add(ChessBoard.board[posX][posY]);
-			}
-		}
+		ArrayList<Square> posMoves = posToSquares(ret,color);
 		
 
 		//For all moves in posMoves, check if by moving would the king result in a check. If so the move is removed, and the square's color is restored.

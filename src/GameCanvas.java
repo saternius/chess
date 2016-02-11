@@ -9,7 +9,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferStrategy;
 import javax.swing.Timer;
 
-// This class is responsible for all the GUI that gets displayed, and manages the game logic
+/// This class is responsible for all the GUI that gets displayed and input handling.
 public class GameCanvas extends Canvas implements MouseMotionListener,
 		MouseListener, MouseWheelListener, KeyListener {
 	boolean repaintInProgress = false;// checks if painting is going on

@@ -2,6 +2,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /** Will be called at each blitter page */
+///Handles repainting.
 public class Chrono implements ActionListener {
 
 	GameCanvas gc;

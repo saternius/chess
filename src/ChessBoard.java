@@ -7,50 +7,59 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
-// The ChessBoard class is responsible for..
-//
-//
+/// The ChessBoard class keeps track of all the squares on the board, along with who's turn it is and various game rules.
+/** 0: no Peice\n
+ 	1: Pawn\n
+ 	2: Knight\n
+ 	3: Bishop\n
+ 	4: Rook\n
+ 	5: Queen\n
+ 	6: King\n
+ 	7: BishopKnight\n
+ 	8: RookKnight\n
+*/ 
 public class ChessBoard {
-	public static Square[][] board = new Square[8][8];
-	static boolean wTurn = true; 
-	public static Piece wKing;
-	public static Piece bKing;
-	public static ArrayList<Square> attacks = new ArrayList<Square>(); /*List of squares in which the opponent is threatening*/
-	public static int[] wStartPos = { //Starting white pieces
+	public static Square[][] board = new Square[8][8]; ///< All the squares on the board. Organized by x,y coordinates: board[x][y]
+	static boolean wTurn = true; ///<true if it is white's turn 
+	public static Piece wKing; ///<the white King
+	public static Piece bKing; ///<the black King
+	public static ArrayList<Square> attacks = new ArrayList<Square>(); ///<List of squares in which the opponent is threatening
+	public static int[] wStartPos = {
 					  0,0,0,0,0,0,0,0,
 			          0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 		              0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
-	                  1,1,1,1,1,1,1,1,
+	                  1,1,8,1,1,7,1,1,
 	                  4,2,3,5,6,3,2,4
-					  };
-	public static int[] bStartPos = { //Starting black pieces
+					  }; ///<Starting white pieces
+	public static int[] bStartPos = { 
 					  4,2,3,5,6,3,2,4,
-	                  1,1,1,1,1,1,1,1,
+	                  1,1,7,1,1,8,1,1,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0
-					  };
+					  };///<Starting black pieces
 	
+	///Initializes all the squares and places the pieces on the squares corresponding to bStartPos and wStartPos
 	public ChessBoard(){
 		for(int i=0;i<8;i++){
 			for(int j=0; j<8;j++){
 				String[] letters = {"A","B","C","D","E","F","G","H"};
 				String name = letters[j]+(8-i);
-				Piece peice = getPiece(wStartPos[(i*8+j)],bStartPos[(i*8+j)]);
+				Piece peice = getPiece(wStartPos[(i*8+j)],bStartPos[(i*8+j)],j,i);
 				board[j][i] = new Square(j,i,peice,name);
 			}
 		}
 		
 	}
 	
-	//Takes in both the white and black positioning arrays, and returns the appropriate Piece 
-	public Piece getPiece(int whitePieceType, int blackPieceType){
+	///Takes accepts the value from both starting positions and returns a piece based of the value.
+	public Piece getPiece(int whitePieceType, int blackPieceType,int x, int y){
 		int peiceType = whitePieceType | blackPieceType ;
 		boolean white = whitePieceType !=0;
 		Piece peice = null;
@@ -58,27 +67,33 @@ public class ChessBoard {
 			case 0:
 				break;
 			case 1:
-				peice = new Pawn(white);
+				peice = new Pawn(white,x,y);
 				break;
 			case 2:
-				peice = new Knight(white);
+				peice = new Knight(white,x,y);
 				break;
 			case 3:
-				peice = new Bishop(white);
+				peice = new Bishop(white,x,y);
 				break;
 			case 4:
-				peice = new Rook(white);
+				peice = new Rook(white,x,y);
 				break;
 			case 5:
-				peice = new Queen(white);
+				peice = new Queen(white,x,y);
 				break;
 			case 6:
-				peice = new King(white);
+				peice = new King(white,x,y);
 				if(white){
 					wKing = peice;
 				}else{
 					bKing = peice;
 				}
+				break;
+			case 7:
+				peice = new RookKnight(white,x,y);
+				break;
+			case 8:
+				peice = new BishopKnight(white,x,y);
 				break;
 		
 		}
@@ -110,7 +125,7 @@ public class ChessBoard {
 	
 	//Return true if king is mated
 	public static boolean isMated(){
-		return isChecked() && (( wTurn && (wKing.posMove(0, 0, false).size()==0)) || ( !wTurn && (bKing.posMove(0, 0, false).size()==0))  );
+		return isChecked() && (( wTurn && (wKing.posMove().size()==0)) || ( !wTurn && (bKing.posMove().size()==0))  );
 	}
 	
 	//Updates the attacks array
@@ -121,9 +136,8 @@ public class ChessBoard {
 				Square sq = board[j][i];
 				if(sq.peice != null){
 					
-					ArrayList<Square> threats = sq.peice.posMove(j, i, false);
+					ArrayList<Square> threats = sq.peice.threatMap();
 					if(wTurn != sq.peice.white){
-
 						for(int k=0; k<threats.size();k++){
 							attacks.add(threats.get(k));
 						}

@@ -4,10 +4,7 @@ import java.awt.Image;
 
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
-/*
- * The main activity of the game.
- * Handles all processes outside of the GameCanvas
- */
+/// Initializes Canvas and manages system game settings
 public class gameApplet extends JApplet {
 	static int boardDim = 400;
 	static Image peicesPng;
