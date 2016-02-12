@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.util.ArrayList;
 
 /// Piece that functions as a king
@@ -135,9 +134,9 @@ public class King extends Piece {
 				y = posMoves.get(i).y;
 				Piece rep = ChessBoard.board[x][y].peice;
 				ChessBoard.board[x][y].peice = this;
-				System.out.println("Checking on x: "+x+" y:"+y);
+				//System.out.println("Checking on x: "+x+" y:"+y);
 				if(ChessBoard.isChecked()){
-					System.out.println("Removing x: "+x+" y:"+y);
+					//System.out.println("Removing x: "+x+" y:"+y);
 					posMoves.remove(i);
 					ChessBoard.board[x][y].color = ChessBoard.board[x][y].ogColor;
 				}

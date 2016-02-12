@@ -12,6 +12,10 @@ import javax.swing.Timer;
 /// This class is responsible for all the GUI that gets displayed and input handling.
 public class GameCanvas extends Canvas implements MouseMotionListener,
 		MouseListener, MouseWheelListener, KeyListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1470670740765816534L;
 	boolean repaintInProgress = false;// checks if painting is going on
 	public static ChessBoard board;
 	// inits the GameCanvas and adds all the eventListener

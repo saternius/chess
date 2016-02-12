@@ -1,10 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 /// The ChessBoard class keeps track of all the squares on the board, along with who's turn it is and various game rules.
@@ -101,12 +96,12 @@ public class ChessBoard {
 
 	}
 	
-	//Returns true if there is noPeices in the specified coords
+	///Returns true if there is noPeices in the specified coords
 	public static boolean noPeices(int x, int y){
 		return board[x][y].peice==null;
 	}
 	
-	//Returns true if King is in checked position
+	///Returns true if King is in checked position
 	public static boolean isChecked(){
 		updateThreats();
 		Piece king = wKing;
@@ -123,12 +118,12 @@ public class ChessBoard {
 		
 	}
 	
-	//Return true if king is mated
+	///Return true if king is mated
 	public static boolean isMated(){
 		return isChecked() && (( wTurn && (wKing.posMove().size()==0)) || ( !wTurn && (bKing.posMove().size()==0))  );
 	}
 	
-	//Updates the attacks array
+	///Updates the attacks array
 	public static void updateThreats(){
 		attacks = new ArrayList<Square>();
 		for(int i=0;i<board.length;i++){
@@ -151,7 +146,7 @@ public class ChessBoard {
 	
 	//-----------------Anything below is beyond the first Assignment-------------------
 	
-	//Alerts a square that the board has been clicked
+	///Alerts a square that the board has been clicked
 	public static void clicked(int x, int y) {
 		//System.out.println("clicked");
 		for(int i=0;i<board.length;i++){
@@ -162,7 +157,7 @@ public class ChessBoard {
 		}
 	}
 	
-	//Clears all the squares of any highlighted colors
+	///Clears all the squares of any highlighted colors
 	public static void unfocusAllSquares(){
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
@@ -171,7 +166,7 @@ public class ChessBoard {
 		}
 	}
 	
-	//Function that draws the ChessBoard
+	///Function that draws the ChessBoard
 	public void draw(Graphics stage){
 		boolean printCoords = true;	
 		boolean printThreats = false;

@@ -1,19 +1,21 @@
 import java.awt.Color;
 ///Handles all the information contained within a square.
 public class Square{
-		static Square focusedSquare = null;  /*Square that is currently selected*/
-		String name;
-		Piece peice = null;
-		int x;
-		int y;
+		static Square focusedSquare = null; ///< Square that is currently selected
+		String name;///< name of square, ex: g7
+		Piece peice = null; ///< piece on this square
+		int x;	///< square x position
+		int y;	///< square y position
 		
 		//Graphical properties.
-		Color color;
-		Color ogColor;
-		int xCoord;
-		int yCoord;
-		int dim = gameApplet.boardDim/8;
+		Color color;	///< color of the square
+		Color ogColor;	///< original color of the square white/green
+		int xCoord;		///< x coordinate based off the screenSize
+		int yCoord;		///< y coordinate based off the screenSize
+		int dim = gameApplet.boardDim/8;///< square width and height.
 		
+		
+		///Initializes square
 		Square(int x,int y,Piece p, String n){
 			this.peice = p;
 			this.x = x;
@@ -22,7 +24,7 @@ public class Square{
 			initGraphics();
 		}
 		
-		//Change the piece on this square
+		///Change the piece on this square
 		private void changePiece(boolean turn) {
 			ChessBoard.unfocusAllSquares();
 			peice = focusedSquare.peice;
@@ -39,7 +41,7 @@ public class Square{
 		
 		//---------------Anything below is beyond the first Assignment---------------------
 		
-		//Handles if this square is clicked on
+		///Handles if this square is clicked on
 		public boolean checkClicked(int mouseX, int mouseY) {
 			boolean hit = mouseX>xCoord && mouseX < xCoord+dim && mouseY>yCoord && mouseY<yCoord+dim;
 			boolean turn = ChessBoard.wTurn;
@@ -64,7 +66,7 @@ public class Square{
 			return false;
 		}
 
-		
+		///Initializes the graphical properties of the square.
 		private void initGraphics() {
 			if((x+1+(y%2))%2 == 0){
 				color = Color.decode("#006633");
@@ -77,7 +79,7 @@ public class Square{
 			yCoord = y*dim;
 			
 		}
-		
+		///Restores the square to it's original color of green/white
 		public void restoreColor() {
 			color = ogColor;
 		}

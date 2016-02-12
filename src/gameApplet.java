@@ -6,6 +6,10 @@ import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 /// Initializes Canvas and manages system game settings
 public class gameApplet extends JApplet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6946286380586962324L;
 	static int boardDim = 400;
 	static Image peicesPng;
     public void init() {

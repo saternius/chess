@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 ///Handles all logic and operations performed by a peice. 
 public class Piece {
-	boolean white;
-	int x;
-	int y;
-	String type;
+	boolean white; ///< true if white
+	int x;///< x position
+	int y;///< y position
+	String type;///< name of piece
 	/*!
 	 * Initializes the piece,
 	 * @param[in] w 	true if the piece is white.
