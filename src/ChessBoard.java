@@ -192,7 +192,10 @@ public class ChessBoard {
 		}
 	
 		int options = wTurn?sizeOfOptions(wArmy):sizeOfOptions(bArmy);	
-		console.log("options: "+options);
+		
+		if(options==0){
+			console.log("is mated");
+		}
 		
 		return options == 0;
 	}
@@ -201,7 +204,9 @@ public class ChessBoard {
 		int options = 0;
 		console.log(pieces);
 		for(int i=0; i<pieces.size();i++){
-			options += pieces.get(i).posMove().size();
+			if(pieces.get(i)!=null){
+				options += pieces.get(i).posMove().size();
+			}
 		}
 		return options;
 	}
