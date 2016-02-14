@@ -7,6 +7,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
+
 import javax.swing.Timer;
 
 /// This class is responsible for all the GUI that gets displayed and input handling.
@@ -17,7 +19,9 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 	 */
 	private static final long serialVersionUID = -1470670740765816534L;
 	boolean repaintInProgress = false;// checks if painting is going on
-	public static ChessBoard board;
+	public static ChessBoard mainBoard;
+	public static ArrayList<ChessBoard> boards = new ArrayList<ChessBoard>();
+	
 	// inits the GameCanvas and adds all the eventListener
 	GameCanvas() { 
 		setIgnoreRepaint(true); 
@@ -27,7 +31,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
 		this.addKeyListener(this);
-		board = new ChessBoard();
+		mainBoard = new ChessBoard();
+		saveState();
 	}
 
 	public void myRepaint() { 
@@ -36,7 +41,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 		repaintInProgress = true;
 		BufferStrategy strategy = getBufferStrategy();// Prevents flickering
 		Graphics stage = strategy.getDrawGraphics();
-		board.draw(stage);
+		mainBoard.draw(stage);
 		
 		if (stage != null)
 			stage.dispose();
@@ -74,7 +79,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 	@Override
 	public void mousePressed(MouseEvent m) {// When the mouse is pressed
 		// TODO Auto-generated method stub
-		ChessBoard.clicked(m.getX(),m.getY());
+		mainBoard.clicked(m.getX(),m.getY());
 	}
 
 	@Override
@@ -94,6 +99,15 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 
 	@Override
 	public void keyPressed(KeyEvent k) {
+		if(k.getKeyCode()==32){
+			if(boards.size()<2){
+				return;
+			}
+			
+			boards.remove(boards.size()-1);
+			mainBoard = new ChessBoard(boards.get(boards.size()-1));
+			mainBoard.updateThreats();
+		}
 		
 	}
 
@@ -107,5 +121,9 @@ public class GameCanvas extends Canvas implements MouseMotionListener,
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public static void saveState() {
+		boards.add(new ChessBoard(mainBoard));
 	}
 }

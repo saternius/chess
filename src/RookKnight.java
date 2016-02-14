@@ -3,8 +3,12 @@ import java.util.ArrayList;
 ///Piece that has the movement of a Rook and a Knight
 public class RookKnight extends Piece {
 
-	public RookKnight(boolean w, int x, int y) {
-		super(w, 1650+330, "RookKnight", x, y);
+	public RookKnight(ChessBoard cb,boolean w, int x, int y) {
+		super(cb,w, 1650+330, "RookKnight", x, y);
+	}
+	
+	public RookKnight(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 	
 	@Override
@@ -14,9 +18,6 @@ public class RookKnight extends Piece {
 	
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 

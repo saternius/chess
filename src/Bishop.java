@@ -2,8 +2,12 @@ import java.util.ArrayList;
 
 /// Piece that functions as a bishop
 public class Bishop extends Piece {
-	public Bishop(boolean w, int x, int y) {
-		super(w,660,"Bishop",x,y);
+	public Bishop(ChessBoard cb, boolean w, int x, int y) {
+		super(cb,w,660,"Bishop",x,y);
+	}
+	
+	public Bishop(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 	
 	@Override
@@ -12,9 +16,6 @@ public class Bishop extends Piece {
 	}
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 	

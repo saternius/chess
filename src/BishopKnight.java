@@ -3,8 +3,12 @@ import java.util.ArrayList;
 ///This piece has the movement of both a Bishop and a Knight.
 public class BishopKnight extends Piece{
 	
-	public BishopKnight(boolean w, int x, int y) {
-		super(w, 1650+660, "BishopKnight", x, y);
+	public BishopKnight(ChessBoard cb, boolean w, int x, int y) {
+		super(cb,w, 1650+660, "BishopKnight", x, y);
+	}
+	
+	public BishopKnight(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 	
 	@Override
@@ -14,9 +18,6 @@ public class BishopKnight extends Piece{
 	
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 

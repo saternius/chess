@@ -3,8 +3,12 @@ import java.util.ArrayList;
 /// Piece that functions as a rook
 public class Rook extends Piece {
 
-	public Rook(boolean w,int x, int y) {
-		super(w,990+330,"Rook",x,y);
+	public Rook(ChessBoard cb,boolean w,int x, int y) {
+		super(cb,w,990+330,"Rook",x,y);
+	}
+	
+	public Rook(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 
 	@Override
@@ -14,9 +18,6 @@ public class Rook extends Piece {
 	
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 	

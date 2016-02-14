@@ -3,8 +3,12 @@ import java.util.ArrayList;
 /// Piece that functions as a knight
 public class Knight extends Piece {
 
-	public Knight(boolean w, int x, int y) {
-		super(w,990,"Knight",x,y);
+	public Knight(ChessBoard cb,boolean w, int x, int y) {
+		super(cb, w,990,"Knight",x,y);
+	}
+	
+	public Knight(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 	
 	@Override
@@ -14,9 +18,6 @@ public class Knight extends Piece {
 	
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 	

@@ -3,9 +3,13 @@ import java.util.ArrayList;
 /// Piece that functions as a queen
 public class Queen extends Piece {
 
-	public Queen(boolean w, int x, int y) {
-		super(w,330,"Queen",x,y);
+	public Queen(ChessBoard cb,boolean w, int x, int y) {
+		super(cb,w,330,"Queen",x,y);
 	
+	}
+	
+	public Queen(ChessBoard cb, Piece piece) {
+		super(cb,piece);
 	}
 	
 	@Override
@@ -15,9 +19,6 @@ public class Queen extends Piece {
 	
 	@Override
 	public ArrayList<Square> posMove() {
-		if(isPinned()){
-			return new ArrayList<Square>();
-		}
 		return getMoves(true);
 	}
 

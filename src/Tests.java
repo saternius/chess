@@ -206,15 +206,7 @@ public class Tests {
 	   assertEquals(false,test.isMated());
    }
    
-   @Test
-   public void checkingPinned() {
-	   ChessBoard test = new ChessBoard();
-	   Piece pawn = test.board[3][6].peice;
-	   assertEquals(false,pawn.isPinned());
-	   test.board[1][4].peice = new Queen(false,1,4);
-	   test.updateThreats();
-	   assertEquals(true,pawn.isPinned());
-   }
+
    
 }
 

@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -14,24 +13,27 @@ import java.util.ArrayList;
  	8: RookKnight\n
 */ 
 public class ChessBoard {
-	public static Square[][] board = new Square[8][8]; ///< All the squares on the board. Organized by x,y coordinates: board[x][y]
-	static boolean wTurn = true; ///<true if it is white's turn 
-	public static Piece wKing; ///<the white King
-	public static Piece bKing; ///<the black King
-	public static ArrayList<Square> attacks = new ArrayList<Square>(); ///<List of squares in which the opponent is threatening
-	public static int[] wStartPos = {
+	public Square[][] board = new Square[8][8]; ///< All the squares on the board. Organized by x,y coordinates: board[x][y]
+	public boolean wTurn = true; ///<true if it is white's turn 
+	public Piece wKing; ///<the white King
+	public Piece bKing; ///<the black King
+	public ArrayList<Piece> wArmy = new ArrayList<Piece>();///< All the black pieces that are not the king
+	public ArrayList<Piece> bArmy = new ArrayList<Piece>();///< All the white pieces that are not the king 
+	public ArrayList<Square> attacks = new ArrayList<Square>(); ///<List of squares in which the opponent is threatening
+	public Square focusedSquare = null; ///< Square that is currently selected
+	public int[] wStartPos = {
 					  0,0,0,0,0,0,0,0,
 			          0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 		              0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
-	                  1,1,8,1,1,7,1,1,
+	                  1,1,1,1,1,1,1,1,
 	                  4,2,3,5,6,3,2,4
 					  }; ///<Starting white pieces
-	public static int[] bStartPos = { 
+	public int[] bStartPos = { 
 					  4,2,3,5,6,3,2,4,
-	                  1,1,7,1,1,8,1,1,
+	                  1,1,1,1,1,1,1,1,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
 	                  0,0,0,0,0,0,0,0,
@@ -46,15 +48,79 @@ public class ChessBoard {
 			for(int j=0; j<8;j++){
 				String[] letters = {"A","B","C","D","E","F","G","H"};
 				String name = letters[j]+(8-i);
-				Piece peice = getPiece(wStartPos[(i*8+j)],bStartPos[(i*8+j)],j,i);
-				board[j][i] = new Square(j,i,peice,name);
+				Piece peice = getPieceFromSet(wStartPos[(i*8+j)],bStartPos[(i*8+j)],j,i);
+				board[j][i] = new Square(this,j,i,peice,name);
 			}
 		}
-		
 	}
 	
+	///Copies board
+	public ChessBoard(ChessBoard cb){
+		
+		//Create empty board
+		for(int i=0;i<8;i++){
+			for(int j=0; j<8;j++){
+				String[] letters = {"A","B","C","D","E","F","G","H"};
+				String name = letters[j]+(8-i);
+				board[j][i] = new Square(this,j,i,null,name);
+			}
+		}
+		//Place pieces where they were
+		for(int i=0;i<cb.board.length;i++){
+			for(int j=0;j<cb.board[i].length;j++){
+				if(cb.board[j][i].peice!=null){
+					Piece p = getPieceFromName(cb.board[j][i].peice);
+					//Piece p = new Piece(this,cb.board[j][i].peice);
+					board[j][i].peice = p;
+						if(p.white){
+							wArmy.add(p);
+						}else{
+							bArmy.add(p);
+						}
+				}
+			}
+		}
+		wTurn = cb.wTurn;
+		wKing = cb.wKing;
+		bKing = cb.bKing;
+	}
+
+	
+	private Piece getPieceFromName(Piece piece) {
+		String type = piece.type;
+		Piece p = null;
+		switch(type){
+			case "Pawn":
+				p = new Pawn(this,piece);
+				break;
+			case "Knight":
+				p = new Knight(this,piece);
+				break;
+			case "Bishop":
+				p = new Bishop(this,piece);
+				break;
+			case "Rook":
+				p = new Rook(this,piece);
+				break;
+			case "Queen":
+				p = new Queen(this,piece);
+				break;
+			case "King":
+				p = new King(this,piece);
+				break;
+			case "BishopKnight":
+				p = new BishopKnight(this,piece);
+				break;
+			case "RookKnight":
+				p = new RookKnight(this,piece);
+				break;
+			
+		}
+		return p;
+	}
+
 	///Takes accepts the value from both starting positions and returns a piece based of the value.
-	public Piece getPiece(int whitePieceType, int blackPieceType,int x, int y){
+	public Piece getPieceFromSet(int whitePieceType, int blackPieceType,int x, int y){
 		int peiceType = whitePieceType | blackPieceType ;
 		boolean white = whitePieceType !=0;
 		Piece peice = null;
@@ -62,22 +128,22 @@ public class ChessBoard {
 			case 0:
 				break;
 			case 1:
-				peice = new Pawn(white,x,y);
+				peice = new Pawn(this,white,x,y);
 				break;
 			case 2:
-				peice = new Knight(white,x,y);
+				peice = new Knight(this,white,x,y);
 				break;
 			case 3:
-				peice = new Bishop(white,x,y);
+				peice = new Bishop(this,white,x,y);
 				break;
 			case 4:
-				peice = new Rook(white,x,y);
+				peice = new Rook(this,white,x,y);
 				break;
 			case 5:
-				peice = new Queen(white,x,y);
+				peice = new Queen(this,white,x,y);
 				break;
 			case 6:
-				peice = new King(white,x,y);
+				peice = new King(this,white,x,y);
 				if(white){
 					wKing = peice;
 				}else{
@@ -85,52 +151,68 @@ public class ChessBoard {
 				}
 				break;
 			case 7:
-				peice = new RookKnight(white,x,y);
+				peice = new RookKnight(this,white,x,y);
 				break;
 			case 8:
-				peice = new BishopKnight(white,x,y);
+				peice = new BishopKnight(this,white,x,y);
 				break;
 		
+		}
+		if(white){
+			wArmy.add(peice);
+		}else{
+			bArmy.add(peice);
 		}
 		return peice;
 
 	}
 	
 	///Returns true if there is noPeices in the specified coords
-	public static boolean noPeices(int x, int y){
+	public boolean noPeices(int x, int y){
 		return board[x][y].peice==null;
 	}
 	
 	///Returns true if King is in checked position
-	public static boolean isChecked(){
+	public boolean isChecked(){
 		updateThreats();
 		Piece king = wKing;
-		String player = "white";
 		if(!wTurn){
-			player = "black";
 			king = bKing;
 		}
-		if((attacks.indexOf(board[king.x][king.y])>-1)){
-			System.out.println(player+" is checked");
-		}
-		
+
 		return (attacks.indexOf(board[king.x][king.y])>-1);
 		
 	}
 	
 	///Return true if king is mated
-	public static boolean isMated(){
-		return isChecked() && (( wTurn && (wKing.posMove().size()==0)) || ( !wTurn && (bKing.posMove().size()==0))  );
+	public boolean isMated(){
+		boolean isChecked = isChecked();
+		if(!isChecked){
+			return false;
+		}
+	
+		int options = wTurn?sizeOfOptions(wArmy):sizeOfOptions(bArmy);	
+		console.log("options: "+options);
+		
+		return options == 0;
+	}
+	
+	public static int sizeOfOptions(ArrayList<Piece> pieces){
+		int options = 0;
+		console.log(pieces);
+		for(int i=0; i<pieces.size();i++){
+			options += pieces.get(i).posMove().size();
+		}
+		return options;
 	}
 	
 	///Updates the attacks array
-	public static void updateThreats(){
+	public void updateThreats(){
 		attacks = new ArrayList<Square>();
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
 				Square sq = board[j][i];
 				if(sq.peice != null){
-					
 					ArrayList<Square> threats = sq.peice.threatMap();
 					if(wTurn != sq.peice.white){
 						for(int k=0; k<threats.size();k++){
@@ -144,10 +226,9 @@ public class ChessBoard {
 	}
 	
 	
-	//-----------------Anything below is beyond the first Assignment-------------------
 	
 	///Alerts a square that the board has been clicked
-	public static void clicked(int x, int y) {
+	public void clicked(int x, int y) {
 		//System.out.println("clicked");
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
@@ -158,7 +239,7 @@ public class ChessBoard {
 	}
 	
 	///Clears all the squares of any highlighted colors
-	public static void unfocusAllSquares(){
+	public void unfocusAllSquares(){
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
 				board[j][i].restoreColor();
@@ -168,37 +249,13 @@ public class ChessBoard {
 	
 	///Function that draws the ChessBoard
 	public void draw(Graphics stage){
-		boolean printCoords = true;	
-		boolean printThreats = false;
 		for(int i=0;i<board.length;i++){
 			for(int j=0; j<board[i].length;j++){
 					Square sq = board[j][i];
-					stage.setColor(sq.color);
-					stage.fillRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
-					stage.setColor(Color.black);
-					stage.drawRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
-					if(sq.peice != null){
-						sq.peice.draw(stage,sq.xCoord,sq.yCoord);
-					}
-					if(printCoords){
-						stage.setColor(Color.black);
-						stage.drawString(sq.name, sq.xCoord+5, sq.yCoord+15);
-					}
+					sq.draw(stage);	
 			}
-		}
-		
-			if(printThreats){
-				stage.setColor(Color.ORANGE);
-				for(int i=0; i<attacks.size();i++){
-					Square sq = attacks.get(i);
-					stage.fillRect(sq.xCoord,sq.yCoord,sq.dim,sq.dim);
-				}
-			}
-		
+		}	
 	}
-	
-	
-	
 }
 
 
